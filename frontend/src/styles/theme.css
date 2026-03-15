@@ -1,0 +1,81 @@
+@import url('https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@300;400;500&family=Inter:wght@300;400;500&display=swap');
+
+:root {
+  --bg: #0d0d0d;
+  --panel: #161616;
+  --panel-light: #1e1e1e;
+  --panel-hover: #232323;
+  --border: #282828;
+  --border-light: #333;
+
+  --text: #e8e8e8;
+  --text-muted: #888;
+  --text-dim: #555;
+
+  --accent: #404040;
+  --accent-hover: #505050;
+
+  --mono: 'JetBrains Mono', monospace;
+  --sans: 'Inter', sans-serif;
+
+  --radius: 6px;
+  --radius-sm: 3px;
+
+  --transition: 120ms ease;
+}
+
+*, *::before, *::after {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+html, body, #root {
+  height: 100%;
+  width: 100%;
+}
+
+body {
+  background: var(--bg);
+  color: var(--text);
+  font-family: var(--sans);
+  font-size: 13px;
+  font-weight: 400;
+  line-height: 1.5;
+  -webkit-font-smoothing: antialiased;
+  overflow: hidden;
+}
+
+button {
+  font-family: var(--sans);
+  font-size: 13px;
+  cursor: pointer;
+  border: none;
+  background: none;
+  color: var(--text);
+}
+
+input, textarea {
+  font-family: var(--sans);
+  font-size: 13px;
+  color: var(--text);
+  background: var(--panel-light);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-sm);
+  outline: none;
+}
+
+input:focus, textarea:focus {
+  border-color: var(--border-light);
+}
+
+::-webkit-scrollbar {
+  width: 4px;
+}
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+::-webkit-scrollbar-thumb {
+  background: var(--border-light);
+  border-radius: 2px;
+}
