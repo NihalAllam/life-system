@@ -105,36 +105,130 @@
 .task-tree {
   display: flex;
   flex-direction: column;
-  gap: 2px;
 }
 
-.tree-node {
+.task-tree__empty {
+  font-family: var(--mono);
+  font-size: 11px;
+  color: var(--text-dim);
+}
+
+/* ── TaskNode ────────────────────────────── */
+.task-node {
   display: flex;
   flex-direction: column;
-  gap: 2px;
 }
 
-.tree-node__row {
+.task-node__row {
   display: flex;
   align-items: center;
   gap: 6px;
-  padding: 3px 4px;
+  padding: 5px 8px 5px 0;
   border-radius: var(--radius-sm);
   transition: background var(--transition);
+  min-height: 28px;
 }
 
-.tree-node__row:hover {
+.task-node__row:hover {
   background: var(--panel-hover);
 }
 
-.tree-node__connector {
-  font-family: var(--mono);
-  font-size: 10px;
+/* Collapse toggle */
+.task-node__toggle {
+  width: 16px;
+  height: 16px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 9px;
   color: var(--text-dim);
+  border-radius: var(--radius-sm);
+  flex-shrink: 0;
+  transition: color var(--transition);
+}
+
+.task-node__toggle:hover {
+  color: var(--text-muted);
+}
+
+/* Checkbox circle */
+.task-node__check {
+  width: 13px;
+  height: 13px;
+  border-radius: 50%;
+  border: 1px solid var(--border-light);
+  flex-shrink: 0;
+  transition: background var(--transition), border-color var(--transition);
+}
+
+.task-node__check:hover {
+  border-color: var(--text-dim);
+}
+
+.task-node__check.done {
+  background: var(--accent-hover);
+  border-color: var(--accent-hover);
+}
+
+/* Title */
+.task-node__title {
+  font-size: 13px;
+  color: var(--text);
+  flex: 1;
+  line-height: 1.4;
+}
+
+.task-node__title.done {
+  color: var(--text-dim);
+  text-decoration: line-through;
+  text-decoration-color: var(--border-light);
+}
+
+/* Meta pills row */
+.task-node__meta {
+  display: flex;
+  gap: 4px;
+  margin-left: auto;
   flex-shrink: 0;
 }
 
-.tree-node__title {
-  font-size: 12px;
-  color: var(--text-muted);
+.task-node__pill {
+  font-family: var(--mono);
+  font-size: 9px;
+  letter-spacing: 0.06em;
+  padding: 2px 5px;
+  border-radius: var(--radius-sm);
+  background: var(--panel-light);
+  color: var(--text-dim);
+  border: 1px solid var(--border);
+}
+
+/* Priority color overrides — subtle, not loud */
+.task-node__pill.priority-urgent {
+  color: #c0756a;
+  border-color: #3a2220;
+}
+
+.task-node__pill.priority-high {
+  color: #a89060;
+  border-color: #332a1a;
+}
+
+.task-node__pill.priority-low {
+  color: var(--text-dim);
+}
+
+/* Indent guide line for children */
+.task-node__children {
+  position: relative;
+}
+
+.task-node__children::before {
+  content: '';
+  position: absolute;
+  left: 19px;
+  top: 0;
+  bottom: 4px;
+  width: 1px;
+  background: var(--border);
 }

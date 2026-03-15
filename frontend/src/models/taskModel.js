@@ -78,7 +78,10 @@ export function createTask(overrides = {}) {
     category       : CATEGORY.OTHER,
 
     parent_task_id : null,       // null = root task
-    depth          : 0,          // 0 = root, max 3
+    
+    // ── Nested Subtasks
+// Use parent_task_id
+// Limit depth to maybe 3.
 
     deadline       : null,       // ISO date string or null
     scheduled_date : null,       // ISO date string — which day to appear
