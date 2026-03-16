@@ -11,12 +11,11 @@ export default function Dashboard() {
   });
 
   function handleToggle(task) {
-    const isRepeating = ['DAILY', 'WEEKLY', 'MONTHLY', 'CUSTOM'].includes(task.type);
     if (task.status === 'DONE') {
       update(task.id, { status: 'PENDING', last_completed: null });
     } else {
       update(task.id, {
-        status        : isRepeating ? 'PENDING' : 'DONE',
+        status        : 'DONE',
         last_completed: new Date().toISOString(),
       });
     }

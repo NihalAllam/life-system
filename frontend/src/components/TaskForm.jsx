@@ -1,17 +1,17 @@
 import { useState } from 'react';
 
-const TYPES  = ['ONE_TIME', 'DAILY', 'WEEKLY', 'MONTHLY'];
-const BLOCKS = ['MORNING', 'AFTERNOON', 'EVENING', 'NIGHT'];
-const WEEKDAYS = ['MON', 'TUE', 'WED', 'THU', 'FRI', 'SAT', 'SUN'];
+const TYPES      = ['ONE_TIME', 'DAILY', 'WEEKLY', 'MONTHLY'];
+const BLOCKS     = ['MORNING', 'AFTERNOON', 'EVENING', 'NIGHT'];
+const WEEKDAYS   = ['MON', 'TUE', 'WED', 'THU', 'FRI', 'SAT', 'SUN'];
 const CATEGORIES = ['STUDY', 'EXERCISE', 'HYGIENE', 'LIFE', 'MOVIES', 'OTHER'];
 
-export default function TaskForm({ onSubmit, onClose }) {
-  const [title, setTitle]   = useState('');
-  const [type, setType]     = useState('ONE_TIME');
-  const [block, setBlock]   = useState('MORNING');
-  const [days, setDays]     = useState([]);        // for WEEKLY
-  const [date, setDate]     = useState('');        // for MONTHLY (1–31)
-  const [category, setCategory] = useState('OTHER');
+export default function TaskForm({ onSubmit, onClose, existing }) {
+  const [title,    setTitle]    = useState(existing?.title      || '');
+  const [type,     setType]     = useState(existing?.type       || 'ONE_TIME');
+  const [block,    setBlock]    = useState(existing?.time_block || 'MORNING');
+  const [category, setCategory] = useState(existing?.category   || 'OTHER');
+  const [days,     setDays]     = useState(existing?.repeat_rule?.days  || []);
+  const [date,     setDate]     = useState(existing?.repeat_rule?.dates?.[0]?.toString() || '');
 
   function toggleDay(day) {
     setDays(prev =>
@@ -32,8 +32,8 @@ export default function TaskForm({ onSubmit, onClose }) {
       title      : title.trim(),
       type,
       time_block : block,
-      repeat_rule: buildRepeatRule(),
       category,
+      repeat_rule: buildRepeatRule(),
     });
     onClose();
   }
@@ -43,7 +43,7 @@ export default function TaskForm({ onSubmit, onClose }) {
       <div className="modal" onClick={e => e.stopPropagation()}>
 
         <div className="modal__header">
-          <span className="modal__title">new task</span>
+          <span className="modal__title">{existing ? 'edit task' : 'new task'}</span>
           <button className="modal__close" onClick={onClose}>✕</button>
         </div>
 
@@ -77,7 +77,6 @@ export default function TaskForm({ onSubmit, onClose }) {
             </div>
           </div>
 
-          {/* WEEKLY — day picker */}
           {type === 'WEEKLY' && (
             <div className="form-field">
               <label className="form-label">repeat on</label>
@@ -95,15 +94,13 @@ export default function TaskForm({ onSubmit, onClose }) {
             </div>
           )}
 
-          {/* MONTHLY — date input */}
           {type === 'MONTHLY' && (
             <div className="form-field">
               <label className="form-label">repeat on day</label>
               <input
                 className="form-input"
                 type="number"
-                min="1"
-                max="31"
+                min="1" max="31"
                 placeholder="e.g. 1"
                 value={date}
                 onChange={e => setDate(e.target.value)}
@@ -146,7 +143,9 @@ export default function TaskForm({ onSubmit, onClose }) {
 
         <div className="modal__footer">
           <button className="btn-ghost" onClick={onClose}>cancel</button>
-          <button className="btn-primary" onClick={handleSubmit}>add task</button>
+          <button className="btn-primary" onClick={handleSubmit}>
+            {existing ? 'save' : 'add task'}
+          </button>
         </div>
 
       </div>

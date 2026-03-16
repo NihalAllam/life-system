@@ -94,15 +94,15 @@ function sortTasks(tasks) {
 function isDailyTask(task) {
   if (task.type !== 'DAILY') return false;
   const rule = task.repeat_rule;
-  // { every: N } — include if today is N days after last_completed
   if (rule?.every) {
-    if (!task.last_completed) return true; // never done → always include
+    if (!task.last_completed) return true;
     const last = new Date(task.last_completed);
     const today = new Date();
     const diffDays = Math.floor((today - last) / 86_400_000);
-    return diffDays >= rule.every;
+    // completed today = still show it (so checkbox stays visible)
+    return diffDays >= 0;
   }
-  return true; // no rule → include every day
+  return true;
 }
 
 function isWeeklyTask(task, todayWeekday) {

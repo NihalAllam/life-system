@@ -237,6 +237,23 @@
   transition: opacity var(--transition), color var(--transition);
 }
 
+.task-node__edit {
+  font-size: 10px;
+  color: var(--text-dim);
+  padding: 2px 4px;
+  border-radius: var(--radius-sm);
+  opacity: 0;
+  transition: opacity var(--transition), color var(--transition);
+}
+
+.task-node__row:hover .task-node__edit {
+  opacity: 1;
+}
+
+.task-node__edit:hover {
+  color: var(--text);
+}
+
 .task-node__row:hover .task-node__delete {
   opacity: 1;
 }

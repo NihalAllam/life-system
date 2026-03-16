@@ -1,6 +1,6 @@
 import { useState } from 'react';
 
-function TaskNode({ task, allTasks, depth = 0, onToggle, onDelete }) {
+function TaskNode({ task, allTasks, depth = 0, onToggle, onDelete, onEdit }) {
   const [collapsed, setCollapsed] = useState(false);
 
   const children = allTasks.filter(t => t.parent_task_id === task.id);
@@ -40,6 +40,13 @@ function TaskNode({ task, allTasks, depth = 0, onToggle, onDelete }) {
             <span className="task-node__pill">{task.deadline}</span>
           )}
           <button
+            className="task-node__edit"
+            onClick={() => onEdit(task)}
+            aria-label="edit task"
+          >
+            ✎
+          </button>
+          <button
             className="task-node__delete"
             onClick={() => onDelete(task.id)}
             aria-label="delete task"
@@ -69,7 +76,7 @@ function TaskNode({ task, allTasks, depth = 0, onToggle, onDelete }) {
   );
 }
 
-export default function TaskTree({ tasks = [], onToggle, onDelete }) {
+export default function TaskTree({ tasks = [], onToggle, onDelete, onEdit }) {
   const roots = tasks.filter(t => !t.parent_task_id);
   if (!roots.length) return <p className="task-tree__empty">no tasks.</p>;
   return (
@@ -82,6 +89,7 @@ export default function TaskTree({ tasks = [], onToggle, onDelete }) {
           depth={0}
           onToggle={onToggle}
           onDelete={onDelete}
+          onEdit={onEdit}
         />
       ))}
     </div>
