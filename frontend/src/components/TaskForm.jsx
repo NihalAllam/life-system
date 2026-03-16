@@ -1,16 +1,40 @@
 import { useState } from 'react';
 
-const TYPES = ['ONE_TIME', 'DAILY', 'WEEKLY', 'MONTHLY'];
+const TYPES  = ['ONE_TIME', 'DAILY', 'WEEKLY', 'MONTHLY'];
 const BLOCKS = ['MORNING', 'AFTERNOON', 'EVENING', 'NIGHT'];
+const WEEKDAYS = ['MON', 'TUE', 'WED', 'THU', 'FRI', 'SAT', 'SUN'];
+const CATEGORIES = ['STUDY', 'EXERCISE', 'HYGIENE', 'LIFE', 'MOVIES', 'OTHER'];
 
 export default function TaskForm({ onSubmit, onClose }) {
-  const [title, setTitle]     = useState('');
-  const [type, setType]       = useState('ONE_TIME');
-  const [block, setBlock]     = useState('MORNING');
+  const [title, setTitle]   = useState('');
+  const [type, setType]     = useState('ONE_TIME');
+  const [block, setBlock]   = useState('MORNING');
+  const [days, setDays]     = useState([]);        // for WEEKLY
+  const [date, setDate]     = useState('');        // for MONTHLY (1–31)
+  const [category, setCategory] = useState('OTHER');
+
+  function toggleDay(day) {
+    setDays(prev =>
+      prev.includes(day) ? prev.filter(d => d !== day) : [...prev, day]
+    );
+  }
+
+  function buildRepeatRule() {
+    if (type === 'DAILY')   return { every: 1 };
+    if (type === 'WEEKLY')  return days.length ? { days } : null;
+    if (type === 'MONTHLY') return date ? { dates: [parseInt(date)] } : null;
+    return null;
+  }
 
   function handleSubmit() {
     if (!title.trim()) return;
-    onSubmit({ title: title.trim(), type, time_block: block });
+    onSubmit({
+      title      : title.trim(),
+      type,
+      time_block : block,
+      repeat_rule: buildRepeatRule(),
+      category,
+    });
     onClose();
   }
 
@@ -53,6 +77,41 @@ export default function TaskForm({ onSubmit, onClose }) {
             </div>
           </div>
 
+          {/* WEEKLY — day picker */}
+          {type === 'WEEKLY' && (
+            <div className="form-field">
+              <label className="form-label">repeat on</label>
+              <div className="form-pills">
+                {WEEKDAYS.map(d => (
+                  <button
+                    key={d}
+                    className={`form-pill ${days.includes(d) ? 'active' : ''}`}
+                    onClick={() => toggleDay(d)}
+                  >
+                    {d.toLowerCase()}
+                  </button>
+                ))}
+              </div>
+            </div>
+          )}
+
+          {/* MONTHLY — date input */}
+          {type === 'MONTHLY' && (
+            <div className="form-field">
+              <label className="form-label">repeat on day</label>
+              <input
+                className="form-input"
+                type="number"
+                min="1"
+                max="31"
+                placeholder="e.g. 1"
+                value={date}
+                onChange={e => setDate(e.target.value)}
+                style={{ width: 80 }}
+              />
+            </div>
+          )}
+
           <div className="form-field">
             <label className="form-label">time block</label>
             <div className="form-pills">
@@ -63,6 +122,21 @@ export default function TaskForm({ onSubmit, onClose }) {
                   onClick={() => setBlock(b)}
                 >
                   {b.toLowerCase()}
+                </button>
+              ))}
+            </div>
+          </div>
+
+          <div className="form-field">
+            <label className="form-label">category</label>
+            <div className="form-pills">
+              {CATEGORIES.map(c => (
+                <button
+                  key={c}
+                  className={`form-pill ${category === c ? 'active' : ''}`}
+                  onClick={() => setCategory(c)}
+                >
+                  {c.toLowerCase()}
                 </button>
               ))}
             </div>

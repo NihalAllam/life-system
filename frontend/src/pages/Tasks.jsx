@@ -14,7 +14,7 @@ export default function Tasks() {
       time_block     : fields.time_block,
       status         : 'PENDING',
       priority       : 'MEDIUM',
-      category       : 'OTHER',
+      category       : fields.category || 'OTHER',
       parent_task_id : null,
       description    : '',
       deadline       : null,

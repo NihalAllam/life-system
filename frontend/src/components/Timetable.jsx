@@ -5,7 +5,7 @@ const TIME_BLOCKS = [
   { id: 'night',     label: 'Night',     range: '21:00 – 00:00' },
 ];
 
-export default function Timetable({ tasks = {} }) {
+export default function Timetable({ tasks = {}, onToggle }) {
   return (
     <div className="timetable">
       {TIME_BLOCKS.map(block => (
@@ -18,8 +18,21 @@ export default function Timetable({ tasks = {} }) {
             {(tasks[block.id] || []).length === 0
               ? <span className="timetable__empty">—</span>
               : (tasks[block.id] || []).map(task => (
-                  <div key={task.id} className="timetable__task">
-                    {task.title}
+                  <div
+                    key={task.id}
+                    className={`timetable__task ${task.status === 'DONE' ? 'done' : ''}`}
+                  >
+                    <button
+                      className={`task-node__check ${task.status === 'DONE' ? 'done' : ''}`}
+                      onClick={() => onToggle && onToggle(task)}
+                      aria-label="toggle done"
+                    />
+                    <span className="timetable__task-title">{task.title}</span>
+                    {task.category && task.category !== 'OTHER' && (
+                      <span className="timetable__task-cat">
+                        {task.category.toLowerCase()}
+                      </span>
+                    )}
                   </div>
                 ))
             }

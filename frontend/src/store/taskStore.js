@@ -1,28 +1,46 @@
-import { useState, useEffect } from 'react';
-import { getTasks, saveTasks, addTask, updateTask, deleteTask } from '../services/taskService';
+import { useState, useEffect, useCallback } from 'react';
+import { getTasks, addTask, updateTask, deleteTask } from '../services/taskService';
 
-// Simple hook-based store — no external state lib needed yet
+// Single shared state outside the hook so all consumers
+// see the same array and re-render together
+let _tasks = [];
+const _listeners = new Set();
+
+function notify() {
+  _listeners.forEach(fn => fn([..._tasks]));
+}
+
 export function useTaskStore() {
-  const [tasks, setTasks] = useState([]);
+  const [tasks, setTasks] = useState(() => {
+    _tasks = getTasks();
+    return _tasks;
+  });
 
   useEffect(() => {
-    setTasks(getTasks());
+    // Register this component as a listener
+    _listeners.add(setTasks);
+    // Sync in case another instance updated before this mounted
+    setTasks([..._tasks]);
+    return () => _listeners.delete(setTasks);
   }, []);
 
-  const add = (task) => {
+  const add = useCallback((task) => {
     const created = addTask(task);
-    setTasks(prev => [...prev, created]);
-  };
+    _tasks = [..._tasks, created];
+    notify();
+  }, []);
 
-  const update = (id, changes) => {
+  const update = useCallback((id, changes) => {
     updateTask(id, changes);
-    setTasks(prev => prev.map(t => t.id === id ? { ...t, ...changes } : t));
-  };
+    _tasks = _tasks.map(t => t.id === id ? { ...t, ...changes } : t);
+    notify();
+  }, []);
 
-  const remove = (id) => {
+  const remove = useCallback((id) => {
     deleteTask(id);
-    setTasks(prev => prev.filter(t => t.id !== id));
-  };
+    _tasks = _tasks.filter(t => t.id !== id);
+    notify();
+  }, []);
 
   return { tasks, add, update, remove };
 }
