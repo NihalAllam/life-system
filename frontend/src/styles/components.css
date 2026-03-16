@@ -203,6 +203,23 @@
   border: 1px solid var(--border);
 }
 
+.task-node__delete {
+  font-size: 9px;
+  color: var(--text-dim);
+  padding: 2px 4px;
+  border-radius: var(--radius-sm);
+  opacity: 0;
+  transition: opacity var(--transition), color var(--transition);
+}
+
+.task-node__row:hover .task-node__delete {
+  opacity: 1;
+}
+
+.task-node__delete:hover {
+  color: var(--text);
+}
+
 /* Priority color overrides — subtle, not loud */
 .task-node__pill.priority-urgent {
   color: #c0756a;

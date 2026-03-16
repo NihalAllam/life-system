@@ -4,7 +4,7 @@ import TaskForm from '../components/TaskForm';
 import { useTaskStore } from '../store/taskStore';
 
 export default function Tasks() {
-  const { tasks, add } = useTaskStore();
+  const { tasks, add, update, remove } = useTaskStore();
   const [showForm, setShowForm] = useState(false);
 
   function handleAdd(fields) {
@@ -26,6 +26,26 @@ export default function Tasks() {
     });
   }
 
+  function handleToggle(task) {
+    const isRepeating = ['DAILY', 'WEEKLY', 'MONTHLY', 'CUSTOM'].includes(task.type);
+    if (task.status === 'DONE') {
+      // uncheck — revert to pending
+      update(task.id, {
+        status         : 'PENDING',
+        last_completed : null,
+      });
+    } else {
+      update(task.id, {
+        status         : isRepeating ? 'PENDING' : 'DONE',
+        last_completed : new Date().toISOString(),
+      });
+    }
+  }
+
+  function handleDelete(id) {
+    remove(id);
+  }
+
   return (
     <div className="main">
       <div className="main__header">
@@ -33,7 +53,7 @@ export default function Tasks() {
         <button className="btn-primary" onClick={() => setShowForm(true)}>+ new</button>
       </div>
       <div className="main__body">
-        <TaskTree tasks={tasks} />
+        <TaskTree tasks={tasks} onToggle={handleToggle} onDelete={handleDelete} />
       </div>
       {showForm && (
         <TaskForm onSubmit={handleAdd} onClose={() => setShowForm(false)} />
