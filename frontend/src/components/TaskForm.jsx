@@ -5,12 +5,12 @@ const BLOCKS     = ['MORNING', 'AFTERNOON', 'EVENING', 'NIGHT'];
 const WEEKDAYS   = ['MON', 'TUE', 'WED', 'THU', 'FRI', 'SAT', 'SUN'];
 const CATEGORIES = ['STUDY', 'EXERCISE', 'HYGIENE', 'LIFE', 'MOVIES', 'OTHER'];
 
-export default function TaskForm({ onSubmit, onClose, existing }) {
+export default function TaskForm({ onSubmit, onClose, existing, defaults = {} }) {
   const [title,    setTitle]    = useState(existing?.title      || '');
-  const [type,     setType]     = useState(existing?.type       || 'ONE_TIME');
-  const [block,    setBlock]    = useState(existing?.time_block || 'MORNING');
+  const [type,     setType]     = useState(existing?.type       || defaults?.type       || 'ONE_TIME');
+  const [block,    setBlock]    = useState(existing?.time_block || defaults?.time_block || 'MORNING');
   const [category, setCategory] = useState(existing?.category   || 'OTHER');
-  const [days,     setDays]     = useState(existing?.repeat_rule?.days  || []);
+  const [days,     setDays]     = useState(existing?.repeat_rule?.days        || []);
   const [date,     setDate]     = useState(existing?.repeat_rule?.dates?.[0]?.toString() || '');
 
   function toggleDay(day) {

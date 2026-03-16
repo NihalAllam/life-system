@@ -5,29 +5,38 @@ const TIME_BLOCKS = [
   { id: 'night',     label: 'Night',     range: '21:00 – 00:00' },
 ];
 
-export default function Timetable({ tasks = {}, onToggle }) {
+export default function Timetable({ tasks = {}, onToggle, onAdd }) {
   return (
-    <div className="timetable">
+    <div className="center-panel">
       {TIME_BLOCKS.map(block => (
-        <div key={block.id} className="timetable__block">
-          <div className="timetable__block-header">
-            <span className="timetable__block-label">{block.label}</span>
-            <span className="timetable__block-range">{block.range}</span>
+        <div key={block.id} className="task-group">
+          <div className="task-group__header">
+            <span className="task-group__label">{block.label}</span>
+            <span className="task-group__label" style={{ color: 'var(--text-dim)', fontWeight: 300 }}>
+              {block.range}
+            </span>
+            <button
+              className="task-group__add"
+              onClick={() => onAdd({ time_block: block.id.toUpperCase() })}
+            >
+              +
+            </button>
           </div>
-          <div className="timetable__block-tasks">
+          <div className="task-group__body">
             {(tasks[block.id] || []).length === 0
-              ? <span className="timetable__empty">—</span>
+              ? <span className="task-group__empty">—</span>
               : (tasks[block.id] || []).map(task => (
                   <div
                     key={task.id}
-                    className={`timetable__task ${task.status === 'DONE' ? 'done' : ''}`}
+                    className="task-row"
                   >
                     <button
                       className={`task-node__check ${task.status === 'DONE' ? 'done' : ''}`}
                       onClick={() => onToggle && onToggle(task)}
-                      aria-label="toggle done"
                     />
-                    <span className="timetable__task-title">{task.title}</span>
+                    <span className={`task-row__title ${task.status === 'DONE' ? 'done' : ''}`}>
+                      {task.title}
+                    </span>
                     {task.category && task.category !== 'OTHER' && (
                       <span className="timetable__task-cat">
                         {task.category.toLowerCase()}
